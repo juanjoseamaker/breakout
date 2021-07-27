@@ -7,6 +7,10 @@ import (
 	"image/color"
 )
 
+const (
+	Velocity = 200
+)
+
 type Rect struct {
 	Color color.Color
 	Rect  pixel.Rect
@@ -25,9 +29,15 @@ func (r *Rect) Update(dt float64) {
 
 func (r *Rect) Input(win *pixelgl.Window) {
 	if win.Pressed(pixelgl.KeyRight) {
-		r.Vel.X = 100
+		r.Vel.X = Velocity
 	}
 	if win.Pressed(pixelgl.KeyLeft) {
-		r.Vel.X = -100
+		r.Vel.X = -Velocity
 	}
+}
+
+func DrawRect(imd *imdraw.IMDraw, rect pixel.Rect, color color.Color) {
+	imd.Color = color
+	imd.Push(rect.Min, rect.Max)
+	imd.Rectangle(0)
 }
