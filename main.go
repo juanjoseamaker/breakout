@@ -47,6 +47,12 @@ func run() {
 		Vel:   pixel.V(0, 0),
 	}
 
+	ball := &app.Ball {
+		Color:  pixel.RGB(255, 0, 255),
+		Circle: pixel.C(win.Bounds().Center(), 15),
+		Vel:    pixel.V(-180, 180),
+	}
+
 	for !win.Closed() {
 		dt := time.Since(last).Seconds()
 		last = time.Now()
@@ -72,18 +78,24 @@ func run() {
 				case 3:
 					color = pixel.RGB(0, 0, 255)
 				}
+
+				rect := pixel.R(float64(Gaps*(j+1) + BrickSizeX*j),
+					WindowSizeY	- float64(Gaps*(i+1) + BrickSizeY*(i+1)),
+					float64(Gaps*(j+1) + BrickSizeX*(j+1)),
+					WindowSizeY	- float64(Gaps*(i+1) + BrickSizeY*i))
 				
-				app.DrawRect(
-					imd,
-					pixel.R(
-						float64(Gaps*(j+1) + BrickSizeX*j),
-						WindowSizeY	- float64(Gaps*(i+1) + BrickSizeY*(i+1)),
-						float64(Gaps*(j+1) + BrickSizeX*(j+1)),
-						WindowSizeY	- float64(Gaps*(i+1) + BrickSizeY*i)),
-					color,
-				)
+				app.DrawRect(imd, rect, color)
+
+				if ball.IsCollidingRect(rect) {
+					level[i][j] = 0
+				}
 			}
 		}
+
+		ball.IsCollidingBounds(win.Bounds().Size())
+		ball.IsCollidingPlataform(player.Rect, player.Vel)
+		ball.Update(dt)
+		ball.Draw(imd)
 
 		imd.Draw(win)
 	

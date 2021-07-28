@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	Velocity = 200
+	Velocity = 300
 )
 
 type Rect struct {
